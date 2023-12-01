@@ -1,19 +1,29 @@
 
 import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+
 class CustomInputFormField extends StatefulWidget {
   final String hintText;
   final String? errorText;
   final IconData? icon;
+  final ValueChanged<String>? onChanged;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   CustomInputFormField({
     required this.hintText,
     this.errorText,
     this.icon,
+    this.onChanged,
+    this.controller,
+    this.validator,
   });
+
   @override
   _CustomInputFormFieldState createState() => _CustomInputFormFieldState();
 }
+
 class _CustomInputFormFieldState extends State<CustomInputFormField> {
   @override
   Widget build(BuildContext context) {
@@ -23,6 +33,10 @@ class _CustomInputFormFieldState extends State<CustomInputFormField> {
         errorText: widget.errorText,
         icon: widget.icon != null ? Icon(widget.icon) : null,
       ),
+      onChanged: widget.onChanged,
+      controller: widget.controller,
+      validator: widget.validator,
     );
   }
 }
+

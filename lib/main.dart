@@ -2,30 +2,33 @@ import 'dart:math';
 
 import 'package:community_app/app-service-connector/bloc/real_login_bloc.dart';
 import 'package:community_app/app_services.dart';
-import 'package:community_app/registration_page.dart';
+import 'package:community_app/login/login_page.dart';
+import 'package:community_app/login/registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:realm/realm.dart';
 
 main() {
+
   WidgetsFlutterBinding.ensureInitialized();
-  var appservice =
-  AppServices("communityapp-urbzp", Uri.parse("https://realm.mongodb.com"));
-  runApp(MyApp(
-    appServices: appservice,
-  ));
+  var appservice = AppServices("communityapp-urbzp", Uri.parse("https://realm.mongodb.com"));
+  final getIt = GetIt.instance;
+  getIt.registerSingleton(appservice);
+  runApp(MyApp(appServices: appservice));
 }
 
 class MyApp extends StatelessWidget {
   final AppServices appServices;
-
   MyApp({required this.appServices, super.key});
 
 //just to know
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
         title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
@@ -37,6 +40,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+
   final AppServices appServices;
 
   const MyHomePage({super.key, required this.appServices});
@@ -50,15 +54,21 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Success App")),
-      body: BlocConsumer<RealLoginBloc, RealLoginState>(
+      body: BlocConsumer<RealLoginBloc, RealmLoginState>(
         listener: (context, state) {
-          if (state is RealLoginSuccess) {
+          if (state is RealmLoginSuccess) {
             navigateToLoginPage();
           }
-        }, builder: (BuildContext context, RealLoginState state) {
-        if (state is RealLoginSuccess) {
+        }, builder: (BuildContext context, RealmLoginState state)
+      {
+        if (state is RealmLoginSuccess) {
+
             return Text("Welcome to jiremali samaj app");
         }
+        else if(state is RealmLoginFailed)
+          {
+            return Text("LoggedinFailed");
+          }
         else
           {
             return Text("Internal server error please try again after sometime");
@@ -71,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void navigateToLoginPage() async {
     await Future.delayed(Duration(seconds: 5)); // Add a delay of 2 seconds
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> RegistrationPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginPage()));
   }
 
 

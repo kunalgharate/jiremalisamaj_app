@@ -1,17 +1,15 @@
 part of 'real_login_bloc.dart';
 
-sealed class RealLoginState extends Equatable {
-  const RealLoginState();
+sealed class RealmLoginState extends Equatable {
+  const RealmLoginState();
 
   @override
   List<Object> get props => [];
 }
+final class RealmLoginInitial extends RealmLoginState {}
 
-final class RealLoginInitial extends RealLoginState {}
-
-final class RealLoginSuccess extends RealLoginState {
+final class RealmLoginSuccess extends RealmLoginState {
   final User user;
-  RealLoginSuccess({required this.user});
+  const RealmLoginSuccess({required this.user});
 }
-
-final class RealLoginFailed extends RealLoginState {}
+final class RealmLoginFailed extends RealmLoginState {}

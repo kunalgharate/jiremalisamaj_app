@@ -6,18 +6,18 @@ import 'package:realm/realm.dart';
 part 'real_login_event.dart';
 part 'real_login_state.dart';
 
-class RealLoginBloc extends Bloc<RealLoginEvent, RealLoginState> {
+class RealLoginBloc extends Bloc<RealmLoginEvent, RealmLoginState> {
   final AppServices appServices;
-  RealLoginBloc(this.appServices) : super(RealLoginInitial()) {
+  RealLoginBloc(this.appServices) : super(RealmLoginInitial()) {
     on<RealmAppLogin>((event, emit) async {
-      emit(RealLoginInitial());
+      emit(RealmLoginInitial());
       if (event is RealmAppLogin) {
         User user = await appServices.logInUserEmailPassword(
             event.email, event.password);
-        emit(RealLoginSuccess(user: user));
+        emit(RealmLoginSuccess(user: user));
       } else if (event is RealmAppLogut) {
         await appServices.logOut();
-        emit(RealLoginFailed());
+        emit(RealmLoginFailed());
       }
     });
   }
