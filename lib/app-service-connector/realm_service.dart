@@ -77,6 +77,20 @@ class RealmServices extends GetxController {
     update();
   }
 
+  AppUser? registerUser(String name, String email, String mobile, String password) {
+
+    try {
+      final newItem = AppUser(
+          ObjectId(), name, email, mobile, password, currentUser!.id);
+      realm.write<AppUser>(() => realm.add<AppUser>(newItem));
+      return newItem;
+    }
+    catch(e)
+    {
+      return null;
+    }
+  }
+
   void deleteItem(AppUser AppUser) {
     realm.write(() => realm.delete(AppUser));
     update();

@@ -29,10 +29,15 @@ class _CustomInputFormFieldState extends State<CustomInputFormField> {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
+        fillColor: Colors.white54,
+        filled: true,
         hintText: widget.hintText,
-        errorText: widget.errorText,
-        icon: widget.icon != null ? Icon(widget.icon) : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        prefixIcon: Icon(widget.icon), // Email Icon
       ),
+
       onChanged: widget.onChanged,
       controller: widget.controller,
       validator: widget.validator,
