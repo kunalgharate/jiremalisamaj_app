@@ -4,6 +4,7 @@ import 'package:community_app/app-service-connector/bloc/real_login_bloc.dart';
 import 'package:community_app/app_services.dart';
 import 'package:community_app/login/login_page.dart';
 import 'package:community_app/login/registration_page.dart';
+import 'package:community_app/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -53,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Success App")),
+      // appBar: AppBar(title: const Text("Success App")),
       body: BlocConsumer<RealLoginBloc, RealmLoginState>(
         listener: (context, state) {
           if (state is RealmLoginSuccess) {
@@ -61,18 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }, builder: (BuildContext context, RealmLoginState state)
       {
-        if (state is RealmLoginSuccess) {
 
-            return Text("Welcome to jiremali samaj app");
-        }
-        else if(state is RealmLoginFailed)
-          {
-            return Text("LoggedinFailed");
-          }
-        else
-          {
-            return Text("Internal server error please try again after sometime");
-          }
+            return const SplashScreen();
 
       },
       ),
