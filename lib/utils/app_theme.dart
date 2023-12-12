@@ -8,7 +8,9 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
       brightness: Brightness.light,
       primarySwatch: AppColors.primary.toMaterialColor(),
-      fontFamily: GoogleFonts.lato().fontFamily,
+      fontFamily: GoogleFonts
+          .lato()
+          .fontFamily,
       unselectedWidgetColor: Colors.white,
       primaryColor: Colors.white,
       hintColor: Colors.white,
@@ -20,15 +22,18 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.white), // Set the color for focused state
+          borderSide: const BorderSide(color: Colors.white),
+          // Set the color for focused state
           borderRadius: BorderRadius.circular(30.0),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.red), // Set the color for error state
+          borderSide: const BorderSide(color: Colors.red),
+          // Set the color for error state
           borderRadius: BorderRadius.circular(30.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.white70), // Set the color for unfocused state
+          borderSide: const BorderSide(color: Colors.white70),
+          // Set the color for unfocused state
           borderRadius: BorderRadius.circular(30.0),
         ),
         filled: true,
@@ -50,17 +55,19 @@ class AppTheme {
       ),
       primaryTextTheme: GoogleFonts.latoTextTheme(TextTheme(
           titleMedium:
-              GoogleFonts.lato(textStyle: TextStyle(color: Colors.white)))),
+          GoogleFonts.lato(textStyle: TextStyle(color: Colors.white)))),
       textTheme: TextTheme(
           titleMedium:
-              GoogleFonts.lato(textStyle: TextStyle(color: Colors.white))));
+          GoogleFonts.lato(textStyle: TextStyle(color: Colors.white))));
 
 
   // Dark Theme
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     primarySwatch: AppColors.primary.toMaterialColor(),
-    fontFamily: GoogleFonts.lato().fontFamily,
+    fontFamily: GoogleFonts
+        .lato()
+        .fontFamily,
     unselectedWidgetColor: Colors.white54,
     primaryColor: Colors.white,
     visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -68,15 +75,18 @@ class AppTheme {
     dividerColor: Colors.black12,
     inputDecorationTheme: InputDecorationTheme(
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white), // Set the color for focused state
+        borderSide: BorderSide(color: Colors.white),
+        // Set the color for focused state
         borderRadius: BorderRadius.circular(30.0),
       ),
       errorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.red), // Set the color for error state
+        borderSide: BorderSide(color: Colors.red),
+        // Set the color for error state
         borderRadius: BorderRadius.circular(30.0),
       ),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white70), // Set the color for unfocused state
+        borderSide: BorderSide(color: Colors.white70),
+        // Set the color for unfocused state
         borderRadius: BorderRadius.circular(30.0),
       ),
       filled: false,
@@ -133,24 +143,32 @@ class AppTheme {
   //     ));
 
 
-  static InputDecoration textFormFieldDecoration  = InputDecoration(
+  static InputDecoration textFormFieldDecoration = InputDecoration(
     labelText: 'Label',
     hintText: 'Hint',
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(30.0),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.blue), // Set the color for focused state
+      borderSide: BorderSide(color: Colors.blue),
+      // Set the color for focused state
       borderRadius: BorderRadius.circular(30.0),
     ),
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.blue), // Set the color for unfocused state
+      borderSide: BorderSide(color: Colors.blue),
+      // Set the color for unfocused state
       borderRadius: BorderRadius.circular(30.0),
     ),
     filled: false,
-    fillColor: Colors.white, // Set the fill color
+    fillColor: Colors.white,
+    // Set the fill color
     floatingLabelBehavior: FloatingLabelBehavior.never,
-    hintStyle: TextStyle(color: Colors.black), // Set the hint color
+    hintStyle: TextStyle(color: Colors.black),
+    // Set the hint color
     contentPadding: EdgeInsets.symmetric(horizontal: 25),
   );
+
+  static TextStyle normalBlackTextTheme = GoogleFonts.ubuntu(color: AppColors.blackColor,fontSize: 16,fontWeight: FontWeight.w400);
+  static TextStyle normalOrangeTextTheme = GoogleFonts.ubuntu(color: AppColors.primary,fontSize: 16,fontWeight: FontWeight.w400);
+
 }
