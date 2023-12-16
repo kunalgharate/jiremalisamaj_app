@@ -4,7 +4,7 @@ import 'package:community_app/app-service-connector/bloc/real_login_bloc.dart';
 import 'package:community_app/app_services.dart';
 import 'package:community_app/login/login_page.dart';
 import 'package:community_app/login/registration_page.dart';
-import 'package:community_app/profile/profile.dart';
+import 'package:community_app/profile/profile_page.dart';
 import 'package:community_app/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         ),
         home: BlocProvider(
             create: (context) => RealLoginBloc(appServices),
-            child: AddPost(title: "")));
+            child: MyHomePage(appServices: appServices,)));
   }
 }
 
@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void navigateToLoginPage() async {
     await Future.delayed(Duration(seconds: 5)); // Add a delay of 2 seconds
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> Profile()));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginPage()));
   }
 
 

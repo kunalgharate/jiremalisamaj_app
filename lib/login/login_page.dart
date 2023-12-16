@@ -4,6 +4,7 @@ import 'package:community_app/app_services.dart';
 import 'package:community_app/components/appbar.dart';
 import 'package:community_app/components/button.dart';
 import 'package:community_app/components/input_form_field.dart';
+import 'package:community_app/landing_page.dart';
 import 'package:community_app/login/login_controller.dart';
 import 'package:community_app/login/registration_page.dart';
 import 'package:community_app/model/schemas.dart';
@@ -124,6 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                       if(user!=null && user?.id!=null)
                       {
                         Get.snackbar("Welcome back","${user.name}! Your login was a success",snackPosition: SnackPosition.BOTTOM);
+                        Get.offAll(LandingPage());
                       }
                       else
                       {
