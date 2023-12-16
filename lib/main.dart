@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         ),
         home: BlocProvider(
             create: (context) => RealLoginBloc(appServices),
-            child: MyHomePage(appServices: appServices)));
+            child: AddPost(title: "")));
   }
 }
 
