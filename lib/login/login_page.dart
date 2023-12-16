@@ -37,7 +37,8 @@ class _LoginPageState extends State<LoginPage> {
         body: Column(
           children: [
 
-            Expanded(flex: 4,child:Column(
+            Expanded(flex: 4,
+              child:Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SvgPicture.asset("assets/images/logo_icon.svg",width: 100,height: 100),
