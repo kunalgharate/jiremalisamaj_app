@@ -4,6 +4,7 @@ import 'package:community_app/app-service-connector/bloc/real_login_bloc.dart';
 import 'package:community_app/app_services.dart';
 import 'package:community_app/login/login_page.dart';
 import 'package:community_app/login/registration_page.dart';
+import 'package:community_app/new_post.dart';
 import 'package:community_app/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
         ),
         home: BlocProvider(
             create: (context) => RealLoginBloc(appServices),
-            child: MyHomePage(appServices: appServices)));
+            child: AddPost(title: "")));
   }
 }
 

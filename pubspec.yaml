@@ -44,6 +44,11 @@ dependencies:
   get: ^4.6.6
   get_it: ^7.6.4
   flutter_svg: ^2.0.9
+  image_picker: ^1.0.5
+  http: ^1.1.2
+  http_parser: ^4.0.2
+  path: 1.8.3
+
 
 
 dev_dependencies:
