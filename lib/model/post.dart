@@ -1,17 +1,16 @@
+
+
 import 'package:realm/realm.dart';
 
-part 'schemas.g.dart';
+part 'post.g.dart';
+
 
 @RealmModel()
-class _AppUser {
+class _Post {
   @MapTo('_id')
   @PrimaryKey()
   late ObjectId id;
-  late String name;
-  late String email;
-  late String mobile;
-  late String password;
+  late String post_message;
   @MapTo('owner_id')
   late String ownerId;
 }
-

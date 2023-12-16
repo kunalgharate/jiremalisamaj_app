@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:community_app/app-service-connector/bloc/real_login_bloc.dart';
 import 'package:community_app/app_services.dart';
+import 'package:community_app/landing_page.dart';
 import 'package:community_app/login/login_page.dart';
 import 'package:community_app/login/registration_page.dart';
 import 'package:community_app/splashscreen.dart';
@@ -62,8 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }, builder: (BuildContext context, RealmLoginState state)
       {
-
-            return const SplashScreen();
+        return const SplashScreen();
 
       },
       ),
@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void navigateToLoginPage() async {
     await Future.delayed(Duration(seconds: 5)); // Add a delay of 2 seconds
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> LandingPage()));
   }
 
 
