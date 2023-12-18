@@ -1,6 +1,7 @@
+import 'dart:ui';
 
+import 'package:community_app/app-service-connector/post_service.dart';
 import 'package:flutter/material.dart';
-
 import 'package:community_app/components/button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,8 @@ class AddPostPage extends StatefulWidget {
 
 class _AddPostPageState extends State<AddPostPage> {
   File? selectedImage;
+  TextEditingController _postDescriptionController = TextEditingController();
+  final PostService postService = Get.isRegistered()? Get.find():Get.put(PostService());
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,6 @@ class _AddPostPageState extends State<AddPostPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            // Handle back button press
             Get.back();
           },
         ),
@@ -38,59 +40,87 @@ class _AddPostPageState extends State<AddPostPage> {
             width: 100,
             child: CustomButton(
               onPress: () {
+                if (_postDescriptionController.text != null &&
+                    selectedImage != null) {
+                } else if (_postDescriptionController.text != null &&
+                    selectedImage == null) {
+                } else if (_postDescriptionController.text == null &&
+                    selectedImage != null) {}
                 Service service = Service();
                 service.submitSubscription(
+
                   file: selectedImage!,
                   filename: basename(selectedImage!.path),
                   token: "b3a915ac01795f8f90a4705421d01ae114d0df57",
                 );
+                postService.createItem();
+                postService.getPost();
               },
               buttonText: 'Post',
             ),
           )
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.6, // Increase vertical size
-                child: FutureBuilder(
-                  future: _getImage(context),
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                        return Text('Please wait');
-                      case ConnectionState.waiting:
-                        return Center(child: CircularProgressIndicator());
-                      default:
-                        if (snapshot.hasError)
-                          return Text('Error: ${snapshot.error}');
-                        else {
-                          return selectedImage != null
-                              ? Image.file(selectedImage!)
-                              : Center(
-                            child: Text("Please Get the Image"),
-                          );
-                        }
-                    }
-                  },
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade500),
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 20),
+            // Post Description Input
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                controller: _postDescriptionController,
+                maxLines: null,
+                // Set maxLines to null for multiline text
+                minLines: 1,
+                style: TextStyle(fontSize: 20.0),
+                // Text size
+                decoration: InputDecoration(
+                    hintText: 'Type your text here...',
+                    // Hint textontroller: _postDescriptionController,
+                    hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+                    // Hint text size and colorecoration: InputDecoration(
+                    border: InputBorder.none),
               ),
-            ],
-          ),
-        ],
+            ),
+            SizedBox(height: 16),
+            // Image Box (Conditionally render based on selectedImage)
+            if (selectedImage != null)
+              Stack(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        height: MediaQuery.of(context).size.height * 0.4,
+                        child: Image.file(selectedImage!),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade500),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        // Clear the selected image
+                        setState(() {
+                          selectedImage = null;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -139,13 +169,5 @@ class _AddPostPageState extends State<AddPostPage> {
     setState(() {
       selectedImage = File(image!.path);
     });
-  }
-
-  //resize the image
-  Future<void> _getImage(BuildContext context) async {
-    if (selectedImage != null) {
-      var imageFile = selectedImage;
-      // Handle image resizing logic if needed
-    }
   }
 }

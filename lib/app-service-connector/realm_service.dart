@@ -1,10 +1,10 @@
 
 
+import 'package:community_app/model/post.dart';
 import 'package:community_app/model/schemas.dart';
 import 'package:get/get.dart';
-
-import 'package:get/get.dart';
 import 'package:realm/realm.dart';
+
 
 class RealmServices extends GetxController {
   static const String queryAllName = "getAllItemsSubscription";
@@ -19,7 +19,7 @@ class RealmServices extends GetxController {
   RealmServices(this.app) {
     if (app.currentUser != null || currentUser != app.currentUser) {
       currentUser ??= app.currentUser;
-      realm = Realm(Configuration.flexibleSync(currentUser!, [AppUser.schema]));
+      realm = Realm(Configuration.flexibleSync(currentUser!, [AppUser.schema,Post.schema, ImgUr.schema]));
       showAll = (realm.subscriptions.findByName(queryAllName) != null);
       if (realm.subscriptions.isEmpty) {
         updateSubscriptions();
@@ -78,7 +78,6 @@ class RealmServices extends GetxController {
   }
 
   AppUser? registerUser(String name, String email, String mobile, String password) {
-
     try {
       final newItem = AppUser(
           ObjectId(), name, email, mobile, password, currentUser!.id);
