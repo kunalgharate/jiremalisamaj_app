@@ -2,12 +2,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:community_app/model/FileUploadModel.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 class Service{
 
-  Future<int> submitSubscription({required File file,required String filename,required String token})async{
+  Future<FileUploadModel?> submitSubscription({required File file,required String filename,required String token})async{
     ///MultiPart request
     var request = http.MultipartRequest(
       'POST', Uri.parse("https://api.imgur.com/3/upload"),
@@ -32,17 +33,19 @@ class Service{
     });
     try {
       var res = await request.send();
-      // Read the response as a string
       var responseString = await http.Response.fromStream(res);
-      // Parse the string as JSON
       var jsonResponse = json.decode(responseString.body);
 
-      print("JSON Response: $jsonResponse");
-
-      return responseString.statusCode;
+      // Check if the response has the expected structure
+      if (jsonResponse.containsKey("status") && jsonResponse.containsKey("success") && jsonResponse.containsKey("data")) {
+        return FileUploadModel.fromJson(jsonResponse);
+      } else {
+        print("Invalid JSON structure in response");
+        return null;
+      }
     } catch (e) {
       print("Error uploading file: $e");
-      return -1; // You can handle the error as needed
+      return null; // You can handle the error as needed
     }
    // return res.statusCode;
   }

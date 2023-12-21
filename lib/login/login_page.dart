@@ -4,7 +4,7 @@ import 'package:community_app/app_services.dart';
 import 'package:community_app/components/appbar.dart';
 import 'package:community_app/components/button.dart';
 import 'package:community_app/components/input_form_field.dart';
-import 'package:community_app/landing_page.dart';
+import 'package:community_app/landing_page/landing_page.dart';
 import 'package:community_app/login/login_controller.dart';
 import 'package:community_app/login/registration_page.dart';
 import 'package:community_app/model/schemas.dart';

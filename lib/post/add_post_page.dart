@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:community_app/app-service-connector/realm_service.dart';
+import 'package:community_app/model/FileUploadModel.dart';
 import 'package:flutter/material.dart';
 import 'package:community_app/components/button.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:community_app/utils/service.dart';
 import 'package:path/path.dart';
 
 import '../app_services.dart';
+import '../landing_page/SharedController.dart';
 
 class AddPostPage extends StatefulWidget {
   AddPostPage({super.key});
@@ -20,15 +22,19 @@ class AddPostPage extends StatefulWidget {
 }
 
 class _AddPostPageState extends State<AddPostPage> {
+
+  SharedController sharedController = Get.isRegistered()? Get.find():Get.put(SharedController());
+
   File? selectedImage;
-  TextEditingController _postDescriptionController = TextEditingController();
   final AppServices appServices = GetIt.I.get<AppServices>();
   late RealmServices realmServices;
 
   @override
   void initState() {
     super.initState();
-    realmServices = Get.isRegistered()?Get.find():Get.put(RealmServices(appServices.app));
+    realmServices = Get.isRegistered()
+        ? Get.find()
+        : Get.put(RealmServices(appServices.app));
   }
 
   @override
@@ -48,22 +54,33 @@ class _AddPostPageState extends State<AddPostPage> {
             padding: EdgeInsets.all(10),
             width: 100,
             child: CustomButton(
-              onPress: () {
-                if (_postDescriptionController.text != null &&
-                    selectedImage != null) {
-                } else if (_postDescriptionController.text != null &&
-                    selectedImage == null) {
-                } else if (_postDescriptionController.text == null &&
-                    selectedImage != null) {}
-                Service service = Service();
-                service.submitSubscription(
+              onPress: () async {
 
-                  file: selectedImage!,
-                  filename: basename(selectedImage!.path),
-                  token: "b3a915ac01795f8f90a4705421d01ae114d0df57",
-                );
-                realmServices.createPost();
-                realmServices.getPost();
+                Service service = Service();
+                if (realmServices.postDesc.text != null && selectedImage != null) {
+                  await uploadPhoto(service);
+                  realmServices.createPost();
+                  realmServices.getPost();
+                  sharedController.selectedIndex.value = 0;
+                  
+                } else if (realmServices.postDesc.text != null && selectedImage == null) {
+                  realmServices.createPost();
+                  realmServices.getPost();
+                  sharedController.selectedIndex.value = 0;
+
+                } else if (realmServices.postDesc.text == null && selectedImage != null) {
+                  await uploadPhoto(service);
+                  realmServices.createPost();
+                  realmServices.getPost();
+                  sharedController.selectedIndex.value = 0;
+                }
+                else
+                  {
+                    const snackBar = SnackBar(
+                      content: Text('Please write your message'),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
               },
               buttonText: 'Post',
             ),
@@ -78,7 +95,7 @@ class _AddPostPageState extends State<AddPostPage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
-                controller: _postDescriptionController,
+                controller: realmServices.postDesc,
                 maxLines: null,
                 // Set maxLines to null for multiline text
                 minLines: 1,
@@ -86,7 +103,7 @@ class _AddPostPageState extends State<AddPostPage> {
                 // Text size
                 decoration: InputDecoration(
                     hintText: 'Type your text here...',
-                    // Hint textontroller: _postDescriptionController,
+                    // Hint textontroller: realmServices.postDes,
                     hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
                     // Hint text size and colorecoration: InputDecoration(
                     border: InputBorder.none),
@@ -141,6 +158,18 @@ class _AddPostPageState extends State<AddPostPage> {
     );
   }
 
+  Future<void> uploadPhoto(Service service) async {
+    FileUploadModel? fileUpload  =  await service.submitSubscription(
+      file: selectedImage!,
+      filename: basename(selectedImage!.path),
+      token: "b3a915ac01795f8f90a4705421d01ae114d0df57",
+    );
+    if(fileUpload!=null) {
+      
+      realmServices.fileUploadModel.value=fileUpload;
+    }
+  }
+
   Future<void> _showMediaOptions(BuildContext context) async {
     showModalBottomSheet(
       context: context,
@@ -179,4 +208,5 @@ class _AddPostPageState extends State<AddPostPage> {
       selectedImage = File(image!.path);
     });
   }
+
 }

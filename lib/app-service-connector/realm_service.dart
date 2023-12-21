@@ -1,5 +1,8 @@
+import 'dart:ffi';
+import 'package:community_app/model/FileUploadModel.dart';
 import 'package:community_app/model/post.dart';
 import 'package:community_app/model/schemas.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:realm/realm.dart';
 
@@ -13,6 +16,14 @@ class RealmServices extends GetxController {
   late Realm realm;
   User? currentUser;
   App app;
+
+  RxList<Post> posts = RxList();
+
+  // upload post paramters
+  Rx<FileUploadModel?> fileUploadModel = FileUploadModel().obs;
+  TextEditingController postDesc = TextEditingController();
+  ImgUr? imgUr;
+
 
   RealmServices(this.app) {
     if (app.currentUser != null || currentUser != app.currentUser) {
@@ -100,8 +111,7 @@ class RealmServices extends GetxController {
     try {
       final newItem =
           AppUser(ObjectId(), name, email, mobile, password, currentUser!.id);
-      realm.write<AppUser>(() => realm.add<AppUser>(newItem));
-      return newItem;
+     return realm.write<AppUser>(() => realm.add<AppUser>(newItem));
     } catch (e) {
       return null;
     }
@@ -133,31 +143,36 @@ class RealmServices extends GetxController {
   Future<void> createPost() async {
     try {
      // await realm.subscriptions.waitForSynchronization(); // Ensure subscription
-      final imgur = ImgUr(
-          'wkV3vTF',
-          'RN6p1glEUXeFl1n',
-          '171427605',
-          'kunalgharate',
-          'image/png',
-          'https://i.imgur.com/wkV3vTF.png',
-          'datetimeValue',
-          'mp4Link');
 
+      if(fileUploadModel.value?.data!=null && fileUploadModel.value?.data?.id !=null)
+        {
+          Data data = fileUploadModel.value!.data!;
+          imgUr = ImgUr(
+              data.id.toString(),
+              data.deletehash.toString(),
+              data.accountId.toString(),
+              data.accountUrl.toString(),
+              data.type.toString(),
+              data.link.toString(),
+              data.datetime.toString(),
+              data.mp4.toString());
+        }
       // Create an instance of _Post
-      final post = Post(ObjectId(), "I like this application", "image",
-          DateTime.now(), currentUser!.id,imgur: imgur);
+      final post = Post(ObjectId(),postDesc.text.isNotEmpty?postDesc.text.toString():"",imgUr==null ?"image":"text",
+          DateTime.now(), currentUser!.id,imgur: imgUr);
       realm.write<Post>(() => realm.add<Post>(post));
+      Get.snackbar("Post successfully", "Your post added successfully");
+      postDesc.text="";
+      imgUr =null;
+
     } catch (e) {
+      Get.snackbar("Something went wrong", "Error $e");
       print("Post add error $e");
     }
   }
 
   void getPost() {
-    final data = realm.all<Post>();
-    for (final post in data) {
-      print('Post ID: ${post.id}');
-      // Add more properties as needed
-    }
+    posts.value = realm.all<Post>().toList();
   }
 
   Future<void> close() async {

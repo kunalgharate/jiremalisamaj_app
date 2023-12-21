@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:community_app/landing_page/SharedController.dart';
 import 'package:community_app/main.dart';
 import 'package:community_app/post/add_post_page.dart';
 import 'package:community_app/post/post_page.dart';
@@ -6,6 +9,7 @@ import 'package:community_app/search/search_page.dart';
 import 'package:community_app/updates/updates_page.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -15,8 +19,7 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-  int _selectedIndex = 0;
-
+  SharedController sharedController = Get.isRegistered()? Get.find():Get.put(SharedController());
   List<Widget> tabItems = [
     Center(child: PostPage()),
     Center(child: SearchPage()),
@@ -34,14 +37,14 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: tabItems[_selectedIndex],
+        child: Obx(() => tabItems[sharedController.selectedIndex.value]),
       ),
       bottomNavigationBar: FlashyTabBar(
-        selectedIndex: _selectedIndex,
+        selectedIndex: sharedController.selectedIndex.value,
         showElevation: true,
         animationCurve: Curves.easeInOut,
         onItemSelected: (index) => setState(() {
-          _selectedIndex = index;
+          sharedController.selectedIndex.value = index;
         }),
         items: [
           createTabBarItem(Icons.home_filled, 'Home', Colors.orange, Colors.grey),

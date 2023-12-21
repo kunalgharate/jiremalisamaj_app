@@ -23,7 +23,7 @@ main() {
   WidgetsFlutterBinding.ensureInitialized();
   var appservice = AppServices("devicesync-tyfnq", Uri.parse("https://realm.mongodb.com"));
   getIt.registerSingleton(appservice);
-  getIt.registerSingleton(new RealmServices(appservice.app));
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        getIt.registerSingleton(new RealmServices(appservice.app));
  // setupDependencies();
   runApp(MyApp(appServices: appservice));
 }
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
   final AppServices appServices;
   MyApp({required this.appServices, super.key});
 
-//just to know
+//just to knowk
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
