@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
 
-class CustomInputFormField extends StatefulWidget {
+class CustomPasswordInputFormField extends StatefulWidget {
   final String hintText;
   final String? errorText;
   final IconData? icon;
@@ -11,7 +11,7 @@ class CustomInputFormField extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
 
-  CustomInputFormField({
+  CustomPasswordInputFormField({
     required this.hintText,
     this.errorText,
     this.icon,
@@ -20,13 +20,15 @@ class CustomInputFormField extends StatefulWidget {
     this.validator,
   });
 
-
-
   @override
-  _CustomInputFormFieldState createState() => _CustomInputFormFieldState();
+  _CustomPasswordInputFormFieldState createState() =>
+      _CustomPasswordInputFormFieldState();
 }
 
-class _CustomInputFormFieldState extends State<CustomInputFormField> {
+class _CustomPasswordInputFormFieldState
+    extends State<CustomPasswordInputFormField> {
+  bool passwordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -37,13 +39,22 @@ class _CustomInputFormFieldState extends State<CustomInputFormField> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        prefixIcon: Icon(widget.icon), // Email Icon
+        prefixIcon: Icon(widget.icon), // Password Icon
+        suffixIcon: IconButton(
+          icon: Icon(
+            passwordVisible ? Icons.visibility : Icons.visibility_off,
+          ),
+          onPressed: () {
+            setState(() {
+              passwordVisible = !passwordVisible;
+            });
+          },
+        ),
       ),
-
+      obscureText: !passwordVisible,
       onChanged: widget.onChanged,
       controller: widget.controller,
       validator: widget.validator,
     );
   }
 }
-

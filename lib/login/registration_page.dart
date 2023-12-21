@@ -16,6 +16,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
+import '../components/input_password_form_field.dart';
 import '../model/schemas.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -53,7 +54,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
           ),
         ],
-      ),),
+              ),),
 
           Expanded(flex: 7,
             child:Column(
@@ -112,16 +113,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           height: 20,
                         ),
 
-                        CustomInputFormField(hintText: "Enter password",icon: Icons.lock,controller: registerController.passwordController, validator: (value){
-                          if (value == null || value.isEmpty) {
-                            return AppString.errorMsg_passwordIsEmpty;
+                        CustomPasswordInputFormField(hintText: "Enter password",errorText: "",icon: Icons.lock,controller: registerController.passwordController,validator: (value){
+                          if (value == null || value.isEmail) {
+                            return AppString.errorMsg_passwordIsValid;
                           }
                           else if(!value.isAlphabetOnly)
+
                           {
                             return AppString.errorMsg_passwordIsValid;
                           }
                           return null;
-                        },),
+                        },)
+      ,
 
                         SizedBox(
                           height: 20,

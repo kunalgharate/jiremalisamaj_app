@@ -1,9 +1,11 @@
 
+import 'package:community_app/Forget_password_or_email/forgetpassword.dart';
 import 'package:community_app/app-service-connector/realm_service.dart';
 import 'package:community_app/app_services.dart';
 import 'package:community_app/components/appbar.dart';
 import 'package:community_app/components/button.dart';
 import 'package:community_app/components/input_form_field.dart';
+import 'package:community_app/components/input_password_form_field.dart';
 import 'package:community_app/landing_page.dart';
 import 'package:community_app/login/login_controller.dart';
 import 'package:community_app/login/registration_page.dart';
@@ -29,8 +31,10 @@ class _LoginPageState extends State<LoginPage> {
   late RealmServices realmServices;
   final formKey = GlobalKey<FormState>();
   final LoginController loginController = Get.isRegistered()? Get.find():Get.put(LoginController());
+
+  get passwordVisible => null;
   Future<bool> _onPop() async {
-    return false;
+    return true;
   }
   @override
   Widget build(BuildContext context) {
@@ -75,6 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                             return AppString.errorMsg_emailIsEmpty;
                           }
                           else if(!value.isEmail)
+
                           {
                             return AppString.errorMsg_emailIsValid;
                           }
@@ -83,7 +88,18 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(
                           height: 25,
                         ),
-                        CustomInputFormField(hintText: "Enter password",errorText: "",icon: Icons.lock,controller: loginController.passwordController),
+                        CustomPasswordInputFormField(hintText: "Enter password",errorText: "",icon: Icons.lock,controller: loginController.passwordController,validator: (value){
+                          if (value == null || value.isEmpty) {
+                            return AppString.errorMsg_passwordIsValid;
+                          }
+                          else if(!value.isAlphabetOnly)
+
+                          {
+                            return AppString.errorMsg_passwordIsValid;
+                          }
+                          return null;
+                        },)
+
                       ],
                     ),
 
@@ -96,7 +112,9 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> const Forget_Password_Page()));
+                        },
                         child: Text(
                           'Forget Password',
                           style: TextStyle(
@@ -176,3 +194,5 @@ class _LoginPageState extends State<LoginPage> {
     realmServices = Get.isRegistered()?Get.find():Get.put(RealmServices(appServices.app));
   }
 }
+
+
