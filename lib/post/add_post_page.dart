@@ -1,14 +1,16 @@
 import 'dart:ui';
-
-import 'package:community_app/app-service-connector/post_service.dart';
+import 'package:community_app/app-service-connector/realm_service.dart';
 import 'package:flutter/material.dart';
 import 'package:community_app/components/button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:community_app/utils/service.dart';
 import 'package:path/path.dart';
+
+import '../app_services.dart';
 
 class AddPostPage extends StatefulWidget {
   AddPostPage({super.key});
@@ -20,7 +22,14 @@ class AddPostPage extends StatefulWidget {
 class _AddPostPageState extends State<AddPostPage> {
   File? selectedImage;
   TextEditingController _postDescriptionController = TextEditingController();
-  final PostService postService = Get.isRegistered()? Get.find():Get.put(PostService());
+  final AppServices appServices = GetIt.I.get<AppServices>();
+  late RealmServices realmServices;
+
+  @override
+  void initState() {
+    super.initState();
+    realmServices = Get.isRegistered()?Get.find():Get.put(RealmServices(appServices.app));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +62,8 @@ class _AddPostPageState extends State<AddPostPage> {
                   filename: basename(selectedImage!.path),
                   token: "b3a915ac01795f8f90a4705421d01ae114d0df57",
                 );
-                postService.createItem();
-                postService.getPost();
+                realmServices.createPost();
+                realmServices.getPost();
               },
               buttonText: 'Post',
             ),

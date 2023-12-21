@@ -5,7 +5,7 @@ part 'post.g.dart';
 
 @RealmModel(ObjectType.embeddedObject)
 class _ImgUr {
-  late String id;
+  late String imgId;
   late String deleteHash;
   late String accountId;
   late String accountUrl;
@@ -22,7 +22,7 @@ class _Post {
   late ObjectId id;
   late String postMessage;
   late String postType;
-  _ImgUr? imgur;
+  late _ImgUr? imgur;
   late DateTime createdDate;
   @MapTo('owner_id')
   late String ownerId;

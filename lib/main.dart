@@ -21,7 +21,7 @@ GetIt getIt = GetIt.instance;
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
-  var appservice = AppServices("communityapp-urbzp", Uri.parse("https://realm.mongodb.com"));
+  var appservice = AppServices("devicesync-tyfnq", Uri.parse("https://realm.mongodb.com"));
   getIt.registerSingleton(appservice);
   getIt.registerSingleton(new RealmServices(appservice.app));
  // setupDependencies();
