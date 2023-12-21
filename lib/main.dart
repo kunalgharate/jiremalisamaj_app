@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:community_app/app-service-connector/bloc/real_login_bloc.dart';
+import 'package:community_app/app-service-connector/realm_service.dart';
 import 'package:community_app/app_services.dart';
 import 'package:community_app/login/login_page.dart';
 import 'package:community_app/login/registration_page.dart';
@@ -12,12 +13,18 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:realm/realm.dart';
 
-main() {
+GetIt getIt = GetIt.instance;
 
+// void setupDependencies() {
+//   getIt.registerLazySingleton(() =>  RealmServices());
+// }
+
+main() {
   WidgetsFlutterBinding.ensureInitialized();
-  var appservice = AppServices("communityapp-urbzp", Uri.parse("https://realm.mongodb.com"));
-  final getIt = GetIt.instance;
+  var appservice = AppServices("devicesync-tyfnq", Uri.parse("https://realm.mongodb.com"));
   getIt.registerSingleton(appservice);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        getIt.registerSingleton(new RealmServices(appservice.app));
+ // setupDependencies();
   runApp(MyApp(appServices: appservice));
 }
 
@@ -25,7 +32,7 @@ class MyApp extends StatelessWidget {
   final AppServices appServices;
   MyApp({required this.appServices, super.key});
 
-//just to know
+//just to knowk
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
