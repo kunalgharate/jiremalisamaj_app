@@ -19,6 +19,8 @@ class RealmServices extends GetxController {
 
   RxList<Post> posts = RxList();
 
+  RxBool isUploading = false.obs;
+
   // upload post paramters
   Rx<FileUploadModel?> fileUploadModel = FileUploadModel().obs;
   TextEditingController postDesc = TextEditingController();
@@ -164,15 +166,20 @@ class RealmServices extends GetxController {
       Get.snackbar("Post successfully", "Your post added successfully");
       postDesc.text="";
       imgUr =null;
+      isUploading.value= false;
 
     } catch (e) {
       Get.snackbar("Something went wrong", "Error $e");
       print("Post add error $e");
+      isUploading.value= false;
     }
   }
 
   void getPost() {
-    posts.value = realm.all<Post>().toList();
+ //   posts.value = realm.all<Post>().toList();
+    posts.value = List<Post>.from(realm.all<Post>())
+      ..sort((a, b) => b.createdDate.compareTo(a.createdDate));
+    isUploading.value= false;
   }
 
   Future<void> close() async {

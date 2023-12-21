@@ -55,20 +55,20 @@ class _AddPostPageState extends State<AddPostPage> {
             width: 100,
             child: CustomButton(
               onPress: () async {
-
+                realmServices.isUploading.value = true;
                 Service service = Service();
-                if (realmServices.postDesc.text != null && selectedImage != null) {
+                if (realmServices.postDesc.text.isNotEmpty && selectedImage != null) {
                   await uploadPhoto(service);
                   realmServices.createPost();
                   realmServices.getPost();
                   sharedController.selectedIndex.value = 0;
-                  
-                } else if (realmServices.postDesc.text != null && selectedImage == null) {
+
+                } else if (realmServices.postDesc.text.isNotEmpty && selectedImage == null) {
                   realmServices.createPost();
                   realmServices.getPost();
                   sharedController.selectedIndex.value = 0;
 
-                } else if (realmServices.postDesc.text == null && selectedImage != null) {
+                } else if (realmServices.postDesc.text.isEmpty && selectedImage != null) {
                   await uploadPhoto(service);
                   realmServices.createPost();
                   realmServices.getPost();
@@ -80,14 +80,17 @@ class _AddPostPageState extends State<AddPostPage> {
                       content: Text('Please write your message'),
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    realmServices.isUploading.value= false;
                   }
               },
               buttonText: 'Post',
+              isLoading: realmServices.isUploading.value,
+              isDisabled: realmServices.isUploading.value,
             ),
           )
         ],
       ),
-      body: SingleChildScrollView(
+      body: Obx(() => realmServices.isUploading.value ? Center(child: CircularProgressIndicator(),): SingleChildScrollView(
         child: Column(
           children: <Widget>[
             SizedBox(height: 20),
@@ -119,7 +122,7 @@ class _AddPostPageState extends State<AddPostPage> {
                     children: <Widget>[
                       Container(
                         padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                         alignment: Alignment.center,
                         width: MediaQuery.of(context).size.width * 0.9,
                         height: MediaQuery.of(context).size.height * 0.4,
@@ -147,7 +150,7 @@ class _AddPostPageState extends State<AddPostPage> {
               ),
           ],
         ),
-      ),
+      ),),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showMediaOptions(context);
@@ -165,7 +168,7 @@ class _AddPostPageState extends State<AddPostPage> {
       token: "b3a915ac01795f8f90a4705421d01ae114d0df57",
     );
     if(fileUpload!=null) {
-      
+
       realmServices.fileUploadModel.value=fileUpload;
     }
   }
