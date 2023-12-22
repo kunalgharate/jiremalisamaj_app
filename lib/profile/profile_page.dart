@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:realm/realm.dart';
 
+import '../setting_page/personal_info/personal_info.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -15,9 +17,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   // Replace these variables with your actual values
-  final String tProfileImage = 'assets/images/logo_icon.svg';
-  final double tDefaultSize = 15.0;
-  final Color tPrimaryColor = Colors.blue; // Replace with your desired color
+  final String tProfileImage = 'assets/images/logo_icon.svg';// Replace with your desired color
 
   // Mock data for GridView. Replace this with your actual data.
   final List<String> gridImages = [
@@ -59,26 +59,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      border: Border.all(
-                        color: tPrimaryColor,
-                        width: 2.0,
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.add,
-                      color: tPrimaryColor,
-                    ),
-                  ),
-                ),
               ],
             ),
             Container(
@@ -102,7 +82,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   Container(
                       width: MediaQuery.of(context).size.width/2.3,
                       height: 35,
-                      child: ElevatedButton(child: Text("Edit Profile") ,onPressed:(){},style: ElevatedButton.styleFrom(backgroundColor: Colors.orangeAccent,
+                      child: ElevatedButton(child: Text("Edit Profile") ,onPressed:(){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> const Personal_Info()));
+
+                      },style: ElevatedButton.styleFrom(backgroundColor: Colors.orangeAccent,
                         foregroundColor: Colors.black,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),))
                   ),
                   Container(

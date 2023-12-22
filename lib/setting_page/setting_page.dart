@@ -1,5 +1,9 @@
 import 'package:community_app/setting_page/change_password/change_password.dart';
+import 'package:community_app/setting_page/personal_info/personal_info.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import 'language/language.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -31,7 +35,7 @@ class _SettingPageState extends State<SettingPage> {
               buildSettingsListItem(
                 title: 'Personal Details',
                 onTap: () {
-                  // Implement your logic to navigate to change password page
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const Personal_Info()));
                 },
                 trailing: Icon(Icons.keyboard_arrow_right),
               ),
@@ -47,7 +51,7 @@ class _SettingPageState extends State<SettingPage> {
               buildSettingsListItem(
                 title: 'Language',
                 onTap: () {
-                  // Implement your logic to navigate to change password page
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const Language()));
                 },
                 trailing: Icon(Icons.keyboard_arrow_right),
               ),
