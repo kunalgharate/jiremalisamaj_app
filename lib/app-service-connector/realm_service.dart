@@ -159,9 +159,10 @@ class RealmServices extends GetxController {
               data.datetime.toString(),
               data.mp4.toString());
         }
+      PostUser postUser=PostUser("7","https://c.ndtvimg.com/2021-10/nn6emufo_ms-dhoni-ipl_650x400_07_October_21.jpg?im=FeatureCrop,algorithm=dnn,width=806,height=605","Dhoni");
       // Create an instance of _Post
       final post = Post(ObjectId(),postDesc.text.isNotEmpty?postDesc.text.toString():"",imgUr==null ?"image":"text",
-          DateTime.now(), currentUser!.id,imgur: imgUr);
+          DateTime.now(), currentUser!.id,imgur: imgUr,postUser: postUser);
       realm.write<Post>(() => realm.add<Post>(post));
       Get.snackbar("Post successfully", "Your post added successfully");
       postDesc.text="";

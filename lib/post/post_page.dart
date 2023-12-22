@@ -35,7 +35,7 @@ class _PostPageState extends State<PostPage> {
           ListView.builder(
               itemCount: realmServices.posts.length,
               itemBuilder: (BuildContext context, int index) {
-                return PostWidget(post: Post(text: realmServices.posts[index].postMessage,imageUrl:realmServices.posts[index].imgur?.link ));
+                return PostWidget(userPost: PostModel(singlePost: realmServices.posts[index],likeCount: 10,isLiked: false));
               })),
     );
   }
