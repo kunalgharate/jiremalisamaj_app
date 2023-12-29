@@ -24,6 +24,22 @@ class _PostWidgetState extends State<PostWidget> {
   bool showFullText = false;
   final int maxTextLengthToShowSeeMore = 100;
 
+  void _showCommentBox() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Set to true to make the sheet take up the full height
+      builder: (BuildContext context) {
+        return CommentBox(
+          onPost: (String comment) {
+            // Handle posting the comment
+            print('Posted Comment: $comment');
+            Navigator.pop(context); // Close the bottom sheet
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -76,7 +92,7 @@ class _PostWidgetState extends State<PostWidget> {
                     fontWeight: FontWeight.normal,
                   ),
                 ),
-                if (widget.userPost.singlePost.postMessage.length> maxTextLengthToShowSeeMore)
+                if (widget.userPost.singlePost.postMessage.length > maxTextLengthToShowSeeMore)
                   TextButton(
                     onPressed: () {
                       setState(() {
@@ -98,7 +114,7 @@ class _PostWidgetState extends State<PostWidget> {
                       constraints: BoxConstraints(
                         minHeight: 350,
                         minWidth: MediaQuery.of(context).size.width,
-                        maxHeight: 400,
+                        maxHeight: 450,
                         maxWidth: MediaQuery.of(context).size.width,
                       ),
                       child: CachedNetworkImage(
@@ -106,10 +122,9 @@ class _PostWidgetState extends State<PostWidget> {
                         imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                                colorFilter:
-                                ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         placeholder: (context, url) => CircularProgressIndicator(),
@@ -128,7 +143,6 @@ class _PostWidgetState extends State<PostWidget> {
                 isLiked: widget.userPost.isLiked,
                 likeCount: widget.userPost.likeCount,
                 onPressed: () {
-                  // Handle like button press
                   setState(() {
                     widget.userPost.isLiked = !widget.userPost.isLiked;
                     if (widget.userPost.isLiked) {
@@ -142,16 +156,12 @@ class _PostWidgetState extends State<PostWidget> {
               IconTextButton(
                 icon: Icons.comment,
                 text: 'Comment',
-                onPressed: () {
-                  // Handle comment button press
-                },
+                onPressed: _showCommentBox,
               ),
               IconTextButton(
                 icon: Icons.send,
                 text: 'Send',
-                onPressed: () {
-                  // Handle send button press
-                },
+                onPressed: () {},
               ),
             ],
           ),
@@ -193,6 +203,7 @@ class LikeButton extends StatelessWidget {
     );
   }
 }
+
 class IconTextButton extends StatelessWidget {
   final IconData icon;
   final String text;
@@ -218,6 +229,115 @@ class IconTextButton extends StatelessWidget {
             Text(text),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class CommentBox extends StatefulWidget {
+  final Function(String) onPost;
+
+  CommentBox({Key? key, required this.onPost}) : super(key: key);
+
+  @override
+  _CommentBoxState createState() => _CommentBoxState();
+}
+
+class _CommentBoxState extends State<CommentBox> {
+  TextEditingController _commentController = TextEditingController();
+  List<Map<String, dynamic>> allComments = [
+    {"comment": "nice", "isStatic": true},
+    {"comment": "bhai bhai|", "isStatic": true},
+    {"comment": "hello", "isStatic": true},
+    {"comment": "nice", "isStatic": true},
+    {"comment": "bhai bhai|", "isStatic": true},
+    {"comment": "hello", "isStatic": true},
+    {"comment": "nice", "isStatic": true},
+    {"comment": "bhai bhai|", "isStatic": true},
+    {"comment": "nice", "isStatic": true},
+    {"comment": "bhai bhai|", "isStatic": true},
+    {"comment": "hello", "isStatic": true},
+    {"comment": "nice", "isStatic": true},
+    {"comment": "bhai bhai|", "isStatic": true},
+    {"comment": "hello", "isStatic": true},
+    {"comment": "nice", "isStatic": true},
+    {"comment": "bhai bhai|", "isStatic": true},
+  ];
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.8,
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          // Display all comments in reverse order
+          Expanded(
+            child: ListView.builder(
+              reverse: true, // Display comments from the top
+              itemCount: allComments.length,
+              itemBuilder: (context, index) {
+                var commentData = allComments[index];
+                return Container(
+
+                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                  padding: EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                  ),
+                  child: Text(
+                    commentData["comment"],
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                );
+              },
+            ),
+          ),
+          // Text input row
+          Container(
+            margin: EdgeInsets.only(top: 16.0),
+            padding: EdgeInsets.all(4.0),
+            decoration: BoxDecoration(
+              color: Colors.orange[200],
+              borderRadius: BorderRadius.circular(20.0),
+              border: Border.all(
+                color: Colors.orangeAccent,
+                width: 1.0,
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _commentController,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter your comment...',
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: () {
+                    String comment = _commentController.text;
+                    if (comment.isNotEmpty) {
+                      // Add the user's comment to the list
+                      allComments.add({"comment": comment, "isStatic": false});
+
+                      // Call the onPost callback
+                      widget.onPost(comment);
+
+                      // Clear the TextField after posting
+                      _commentController.clear();
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

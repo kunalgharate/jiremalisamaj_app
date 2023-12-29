@@ -33,7 +33,8 @@ class RealmServices extends GetxController {
       realm = Realm(Configuration.flexibleSync(currentUser!, [
         AppUser.schema,
         Post.schema,
-        ImgUr.schema
+        ImgUr.schema,
+        PostUser.schema
       ]));
       if (realm.subscriptions.isEmpty) {
         updateSubscriptions();
