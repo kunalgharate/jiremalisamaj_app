@@ -1,6 +1,6 @@
-import 'dart:ui';
 import 'package:community_app/app-service-connector/realm_service.dart';
 import 'package:community_app/model/FileUploadModel.dart';
+import 'package:community_app/profile/upload_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:community_app/components/button.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +24,9 @@ class AddPostPage extends StatefulWidget {
 class _AddPostPageState extends State<AddPostPage> {
 
   SharedController sharedController = Get.isRegistered()? Get.find():Get.put(SharedController());
-
+  UploadController uploadController = Get.isRegistered()? Get.find():Get.put(UploadController());
   File? selectedImage;
+
   final AppServices appServices = GetIt.I.get<AppServices>();
   late RealmServices realmServices;
 
@@ -56,9 +57,8 @@ class _AddPostPageState extends State<AddPostPage> {
             child: CustomButton(
               onPress: () async {
 
-                Service service = Service();
                 if (realmServices.postDesc.text != null && selectedImage != null) {
-                  await uploadPhoto(service);
+                  uploadController.uploadPhoto(selectedImage!);
                   realmServices.createPost();
                   realmServices.getPost();
                   sharedController.selectedIndex.value = 0;
@@ -69,7 +69,7 @@ class _AddPostPageState extends State<AddPostPage> {
                   sharedController.selectedIndex.value = 0;
 
                 } else if (realmServices.postDesc.text == null && selectedImage != null) {
-                  await uploadPhoto(service);
+                  uploadController.uploadPhoto(selectedImage!);
                   realmServices.createPost();
                   realmServices.getPost();
                   sharedController.selectedIndex.value = 0;

@@ -1,12 +1,22 @@
-
-
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:community_app/app-service-connector/realm_service.dart';
+import 'package:community_app/model/FileUploadModel.dart';
+import 'package:community_app/profile/upload_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:community_app/components/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:community_app/utils/service.dart';
+import 'package:path/path.dart';
 
-import '../../utils/app_colors.dart';
+import '../../app_services.dart';
+import '../../landing_page/SharedController.dart';
 import '../../utils/app_string.dart';
+
 import 'info_controller.dart';
 
 class Personal_Info extends StatefulWidget {
@@ -29,9 +39,25 @@ class _Personal_InfoState extends State<Personal_Info> {
 
   final InfoController infoController = Get.isRegistered()? Get.find():Get.put(InfoController());
 
-  final String tProfileImage = 'assets/images/logo_icon.svg';
+  UploadController uploadController = Get.isRegistered()? Get.find():Get.put(UploadController());
+  File? selectedImage;
+
+  final AppServices appServices = GetIt.I.get<AppServices>();
+  late RealmServices realmServices;
+ // String profileImageUrl = "https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=612x612&w=0&k=20&c=s0aTdmT5aU6b8ot7VKm11DeID6NctRCpB755rA1BIP0=";
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    realmServices = Get.isRegistered()
+        ? Get.find()
+        : Get.put(RealmServices(appServices.app));
+  }
+
+
   final double tDefaultSize = 15.0;
-  final Color tPrimaryColor = Colors.blue;
 
   @override
   Widget build(BuildContext context) {
@@ -42,43 +68,42 @@ class _Personal_InfoState extends State<Personal_Info> {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 40),
             child: Column(
               children: [
-                Stack(
+                if (selectedImage == null)
+                  Stack(
                   children: [
                     SizedBox(
-                      height: 100,
+                      height: 125,
                       width: 125,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: SvgPicture.asset(
-                          tProfileImage,
-                          // Add the fit property if needed
-                          // fit: BoxFit.cover,
-                        ),
+                        child: Obx(() => CachedNetworkImage(
+                          imageUrl: uploadController.profileImageUrl.value,
+                          progressIndicatorBuilder: (context, url, downloadProgress) =>
+                              Center(child: CircularProgressIndicator(value: downloadProgress.progress)),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
+                        ),)
                       ),
                     ),
                     Positioned(
                       bottom: 0,
-                      top: 65,
-                      right: 0,
-                      left: 20,
+                      top: 80,
+                      right: -25,
+                      left: 35,
                       child: Container(
                         width: 15,
                         height: 15,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white,
-                          border: Border.all(
-                            color: tPrimaryColor,
-                            width: 2.0,
-                          ),
+                          color: Colors.blue,
                         ),
                         child: IconButton(
-                          color: tPrimaryColor,
+                          icon: Icon(Icons.add, size: 35),
+                          color: Colors.white,
                           onPressed: () {
-                            // Add your functionality when the icon is pressed
+                          _showMediaOptions(context);
                           },
-                          icon: Icon(Icons.add, size: 30),
                         ),
+
                       ),
                     ),
                   ],
@@ -102,6 +127,7 @@ class _Personal_InfoState extends State<Personal_Info> {
                         {
                           return AppString.errorMsg_fullnameIsValid;
                         }
+
                         return null;
                       },
                         decoration: const InputDecoration(border: UnderlineInputBorder(),labelText: "Full Name"),
@@ -193,7 +219,8 @@ class _Personal_InfoState extends State<Personal_Info> {
                           children: [
                             TextButton(
                               style: flatButtonStyle,
-                              onPressed: () { },
+                              onPressed: () {
+                              },
                               child: Text('Private'),
                             )
                           ],
@@ -206,13 +233,64 @@ class _Personal_InfoState extends State<Personal_Info> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 80, vertical: 10),
                   child: CustomButton(
-                      onPress: () {}, buttonText: "Submit"),
+                      onPress: (){}, buttonText: "Submit"),
                 )
               ],
             )
         ),
       ),
     );
+  }
+  Future<void> uploadPhoto(Service service) async {
+    FileUploadModel? fileUpload  =  await service.submitSubscription(
+      file: selectedImage!,
+      filename: basename(selectedImage!.path),
+      token: "b3a915ac01795f8f90a4705421d01ae114d0df57",
+    );
+    if(fileUpload!=null) {
+
+      realmServices.fileUploadModel.value=fileUpload;
+    }
+  }
+
+  Future<void> _showMediaOptions(BuildContext context) async {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.camera),
+                title: Text('Camera'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  getImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.image),
+                title: Text('Gallery'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  getImage(ImageSource.gallery);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future getImage(ImageSource source) async {
+    ImagePicker imagePicker = ImagePicker();
+    final XFile? image = await imagePicker.pickImage(source: source);
+
+    setState(() {
+      selectedImage = File(image!.path);
+      uploadController.uploadPhoto(selectedImage!);
+    });
   }
 }
 
